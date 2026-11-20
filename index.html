@@ -197,6 +197,87 @@
     .detail-cat { margin-bottom: 6px; }
     .detail-desc { font-size: 14.5px; color: var(--muted); margin-top: 10px; line-height: 1.55; }
 
+
+    .arrows { display: none; gap: 8px; }
+    .arrows .icon-btn { margin: 0; font-size: 22px; line-height: 1; padding-bottom: 3px; }
+    .list { display: block; }
+
+    /* ================= TABLET (≥ 680px) ================= */
+    @media (min-width: 680px) {
+      .page { max-width: none; }
+      .hero { height: min(66vh, 560px); }
+      .hero-kanji { font-size: 72px; }
+      .hero h1 { font-size: 28px; }
+      .hero-tag { font-size: 22px; }
+      .nav { padding: 0 max(8px, calc((100% - 1200px) / 2)); }
+      .feat-wrap, #menu, footer, .no-results { max-width: 1200px; margin-left: auto; margin-right: auto; }
+      .feat-head, .sec { padding-left: 32px; padding-right: 32px; }
+      .feat { padding: 0 32px 6px; scroll-padding: 0 32px; }
+      .feat-card { flex-basis: 40%; }
+      .list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+      .dish:last-of-type { border-bottom: 1px solid var(--line-soft); }
+      .sec-title { font-size: 42px; }
+    }
+
+    /* ================= PORTÁTIL / ESCRITORIO (≥ 1000px) ================= */
+    @media (min-width: 1000px) {
+      body { font-size: 16px; }
+      .hero { height: min(72vh, 640px); }
+      .hero-content { bottom: 56px; }
+      .hero-kanji { font-size: 88px; }
+      .hero h1 { font-size: 34px; }
+      .hero-tag { font-size: 25px; }
+      .lang { top: 22px; right: 28px; }
+      .chip { padding: 11px 18px; }
+      .nav-track { justify-content: safe center; }
+
+      .feat-wrap { padding-top: 56px; }
+      .arrows { display: flex; }
+      .feat-card { flex-basis: calc((100% - 36px) / 4); }
+      .feat-card span { font-size: 21px; }
+
+      .sec { padding-top: 64px; }
+      .sec-title { font-size: 48px; }
+      .sec-head { margin-bottom: 24px; }
+
+      /* platos en tarjetas, 3 columnas */
+      .list { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+      .dish, .dish:last-of-type {
+        display: flex; flex-direction: column; gap: 0; padding: 0;
+        border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden;
+        background: var(--surface);
+        transition: transform .25s, border-color .25s, box-shadow .25s;
+      }
+      .dish > span { padding: 18px 20px 22px; }
+      .dish .thumb {
+        order: -1; width: 100%; height: auto; aspect-ratio: 4 / 3; border-radius: 0;
+        transition: transform .5s cubic-bezier(.2,.8,.2,1);
+      }
+      .dish-name { font-size: 22px; }
+      .dish-desc { font-size: 13.5px; -webkit-line-clamp: 3; }
+      .dish.no-img > span { padding: 24px; }
+      button.dish:hover { border-color: var(--line); transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.45); }
+      button.dish:hover .thumb { transform: scale(1.04); }
+      .feat-card img { transition: transform .5s cubic-bezier(.2,.8,.2,1), filter .3s; }
+      .feat-card:hover img { filter: brightness(1.08); }
+
+      /* ficha del plato: ventana centrada */
+      .sheet {
+        left: 50%; right: auto; top: 50%; bottom: auto; margin: 0;
+        width: min(960px, 92vw); max-height: 86vh; max-width: none;
+        border: 1px solid var(--line); border-radius: 22px;
+        transform: translate(-50%, -46%); opacity: 0;
+        transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .25s, visibility .3s;
+      }
+      .sheet.show { transform: translate(-50%, -50%); opacity: 1; }
+      .detail { display: grid; grid-template-columns: 1.25fr 1fr; overflow: hidden; }
+      .detail-img img { height: 100%; min-height: 460px; aspect-ratio: auto; border-radius: 0; }
+      .detail .sheet-body { align-self: center; padding: 44px 40px; }
+      .detail h2 { font-size: 36px; }
+      .detail-desc { font-size: 15.5px; }
+      .close { left: 14px; right: auto; }
+    }
+
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -237,6 +318,10 @@
         <div>
           <div class="kicker" data-t="featKicker"></div>
           <div class="feat-title" data-t="featTitle"></div>
+        </div>
+        <div class="arrows">
+          <button type="button" class="icon-btn" data-dir="-1" aria-label="‹">‹</button>
+          <button type="button" class="icon-btn" data-dir="1" aria-label="›">›</button>
         </div>
       </div>
       <div class="feat" id="feat"></div>
@@ -567,7 +652,7 @@
             <h2 class="sec-title">${esc(s[lang][2] || s[lang][0])}</h2>
             ${s[lang][1] ? `<div class="sec-note">${esc(s[lang][1])}</div>` : ""}
           </div>
-          ${s.platos.map((p) => {
+          <div class="list">${s.platos.map((p) => {
             const tag = p.f ? "button" : "div";
             return `
             <${tag} class="dish${p.f ? "" : " no-img"}" ${p.f ? `type="button" data-i="${PLATOS.indexOf(p)}"` : ""} data-s="${esc(norm(p.es.join(" ") + " " + p.en.join(" ")))}">
@@ -579,7 +664,7 @@
               </span>
               ${p.f ? `<img class="thumb" src="${img(p.f, 480)}" alt="${esc(p[lang][0])}" loading="lazy" decoding="async" width="112" height="112">` : ""}
             </${tag}>`;
-          }).join("")}
+          }).join("")}</div>
         </section>`).join("");
 
       bindChips();
@@ -631,7 +716,14 @@
       b.addEventListener("click", () => {
         lang = b.dataset.lang;
         try { localStorage.setItem("mizu-lang", lang); } catch (e) {}
-        render();
+        document.querySelectorAll(".arrows button").forEach((b) =>
+      b.addEventListener("click", () => {
+        const f = $("#feat");
+        f.scrollBy({ left: +b.dataset.dir * f.clientWidth * 0.8, behavior: "smooth" });
+      })
+    );
+
+    render();
       })
     );
 
@@ -684,6 +776,13 @@
       $("#detail").scrollTop = 0;
       abrir();
     });
+
+    document.querySelectorAll(".arrows button").forEach((b) =>
+      b.addEventListener("click", () => {
+        const f = $("#feat");
+        f.scrollBy({ left: +b.dataset.dir * f.clientWidth * 0.8, behavior: "smooth" });
+      })
+    );
 
     render();
   </script>
