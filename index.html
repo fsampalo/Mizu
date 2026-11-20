@@ -8,7 +8,9 @@
   <meta name="theme-color" content="#0e0d0c">
   <meta property="og:title" content="MIZU · Carta">
   <meta property="og:description" content="Cocina de fusión japonesa y mediterránea.">
+  <meta property="og:image" content="fotos/mizu-gold-960.webp">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0d0c'/%3E%3Ctext x='50' y='70' font-size='62' text-anchor='middle' fill='%23f4a27e' font-family='serif'%3E%E6%B0%B4%3C/text%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="fotos/mizu-gold-960.webp" fetchpriority="high">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,17 +21,19 @@
     :root {
       --bg: #0e0d0c;
       --surface: #171412;
-      --line: rgba(244, 162, 126, 0.18);
+      --surface-2: #1e1a17;
+      --line: rgba(244, 162, 126, 0.2);
       --line-soft: rgba(242, 236, 233, 0.08);
       --accent: #f4a27e;
       --accent-soft: #f7c3ab;
       --ink: #141110;
       --text: #f2ece9;
       --muted: #a89c95;
-      --faint: #6f6560;
+      --faint: #74695f;
       --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
       --sans: 'Gotham', 'Gotham SSm A', 'Montserrat', system-ui, sans-serif;
       --jp: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+      --nav-h: 62px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,261 +46,198 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
-    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    img { display: block; }
 
-    .page { max-width: 560px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
+    .page { max-width: 600px; margin: 0 auto; min-height: 100vh; padding-bottom: 120px; }
 
     /* ---------- Portada ---------- */
-    .hero {
-      text-align: center;
-      padding: 60px 24px 40px;
-      background: radial-gradient(circle at 50% 38%, rgba(244, 162, 126, 0.09), transparent 62%);
+    .hero { position: relative; height: min(64vh, 480px); min-height: 340px; overflow: hidden; }
+    .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(14,13,12,0.35) 0%, rgba(14,13,12,0.15) 35%, rgba(14,13,12,0.85) 78%, var(--bg) 100%);
     }
-    .hero-kanji {
-      font-family: var(--jp);
-      font-weight: 600;
-      font-size: 68px;
-      line-height: 1;
-      color: var(--accent);
-    }
-    .hero h1 {
-      font-weight: 700;
-      font-size: 22px;
-      letter-spacing: 0.55em;
-      margin: 20px 0 0 0.55em;
-    }
-    .hero-tag {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 19px;
-      color: var(--muted);
-      margin-top: 8px;
-    }
-    .hero-rule { width: 44px; height: 1px; background: var(--accent); opacity: 0.6; margin: 24px auto 0; }
+    .hero-content { position: absolute; left: 0; right: 0; bottom: 34px; z-index: 1; text-align: center; padding: 0 24px; }
+    .hero-kanji { font-family: var(--jp); font-weight: 600; font-size: 58px; line-height: 1; color: var(--accent); text-shadow: 0 4px 24px rgba(0,0,0,.5); }
+    .hero h1 { font-weight: 700; font-size: 22px; letter-spacing: 0.55em; margin: 16px 0 0 0.55em; }
+    .hero-tag { font-family: var(--serif); font-style: italic; font-size: 19px; color: #d6cbc5; margin-top: 6px; }
 
-    /* ---------- Navegación de categorías ---------- */
+    .lang {
+      position: absolute; top: calc(14px + env(safe-area-inset-top)); right: 14px; z-index: 2;
+      display: flex; padding: 3px; border-radius: 999px;
+      background: rgba(14,13,12,0.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .lang button {
+      border: 0; background: transparent; color: #d6cbc5;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      padding: 7px 11px; border-radius: 999px;
+    }
+    .lang button[aria-pressed="true"] { background: var(--accent); color: var(--ink); }
+
+    /* ---------- Navegación ---------- */
     .nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(14, 13, 12, 0.9);
-      -webkit-backdrop-filter: blur(14px);
-      backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 20; height: var(--nav-h);
+      display: flex; align-items: center;
+      background: rgba(14,13,12,0.92);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--line-soft);
     }
+    .icon-btn {
+      flex: none; width: 40px; height: 40px; margin-left: 12px;
+      display: grid; place-items: center;
+      border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--accent);
+    }
+    .icon-btn svg { width: 17px; height: 17px; }
     .nav-track {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 12px 18px;
-      scrollbar-width: none;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+      flex: 1; display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 0 10px; scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 20px), transparent);
     }
     .nav-track::-webkit-scrollbar { display: none; }
     .chip {
-      flex: none;
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--muted);
-      font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      padding: 10px 15px;
-      border-radius: 999px;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      flex: none; border: 1px solid var(--line); background: transparent; color: var(--muted);
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 10px 15px; border-radius: 999px; white-space: nowrap;
+      transition: background .2s, color .2s, border-color .2s;
     }
     .chip.on { background: var(--accent); border-color: var(--accent); color: var(--ink); }
 
+    .search { flex: 1; display: none; align-items: center; gap: 10px; padding: 0 12px 0 10px; }
+    .nav.searching .nav-track { display: none; }
+    .nav.searching .search { display: flex; }
+    .search input {
+      flex: 1; min-width: 0; height: 40px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--surface); color: var(--text);
+      font: 500 15px var(--sans); padding: 0 16px; outline: none;
+    }
+    .search input:focus { border-color: var(--accent); }
+    .search button { border: 0; background: none; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: .06em; padding: 8px 4px; }
+
+    /* ---------- Destacados ---------- */
+    .feat-wrap { padding: 34px 0 4px; }
+    .feat-wrap[hidden] { display: none; }
+    .feat-head { padding: 0 22px 14px; display: flex; align-items: baseline; justify-content: space-between; }
+    .kicker { font-size: 10.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); }
+    .feat-title { font-family: var(--serif); font-weight: 500; font-size: 28px; line-height: 1.1; margin-top: 4px; }
+    .feat {
+      display: flex; gap: 12px; overflow-x: auto; padding: 0 22px 6px;
+      scroll-snap-type: x mandatory; scroll-padding: 0 22px; scrollbar-width: none;
+    }
+    .feat::-webkit-scrollbar { display: none; }
+    .feat-card { flex: 0 0 66%; scroll-snap-align: start; border: 0; background: none; text-align: left; }
+    .feat-card img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; background: var(--surface-2); }
+    .feat-card span { display: block; font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.2; margin-top: 10px; }
+
     /* ---------- Secciones ---------- */
-    .sec { padding: 44px 22px 6px; scroll-margin-top: 62px; }
-    .sec-head { margin-bottom: 6px; }
-    .sec-num { font-size: 10.5px; font-weight: 600; letter-spacing: 0.24em; color: var(--accent); }
-    .sec-title {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 36px;
-      line-height: 1.1;
-      margin-top: 6px;
-    }
-    .sec-note { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--muted); margin-top: 2px; }
-    .sec-head::after {
-      content: "";
-      display: block;
-      height: 1px;
-      margin-top: 18px;
-      background: linear-gradient(90deg, var(--line), transparent);
-    }
+    .sec { padding: 44px 22px 4px; scroll-margin-top: var(--nav-h); }
+    .sec[hidden] { display: none; }
+    .sec-title { font-family: var(--serif); font-weight: 500; font-size: 36px; line-height: 1.1; margin-top: 6px; }
+    .sec-note { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--muted); }
+    .sec-head::after { content: ""; display: block; height: 1px; margin-top: 16px; background: linear-gradient(90deg, var(--line), transparent); }
 
     /* ---------- Platos ---------- */
     .dish {
-      display: grid;
-      grid-template-columns: 30px 1fr;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--line-soft);
+      display: grid; grid-template-columns: 1fr 112px; gap: 16px; align-items: start;
+      width: 100%; padding: 18px 0; text-align: left;
+      background: none; border: 0; border-bottom: 1px solid var(--line-soft);
     }
-    .dish:last-child { border-bottom: none; }
-    .dish.plain { grid-template-columns: 1fr; }
+    .dish.no-img { grid-template-columns: 1fr; cursor: default; }
     .dish[hidden] { display: none; }
-    .dish-n { font-family: var(--serif); font-size: 17px; color: var(--accent); padding-top: 3px; }
-    .dish-name {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: 21px;
-      line-height: 1.2;
+    .dish:last-of-type { border-bottom: 0; }
+    .dish-name { display: block; font-family: var(--serif); font-weight: 600; font-size: 20px; line-height: 1.2; }
+    .dish-meta { display: block; font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+    .dish-desc {
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      font-size: 13px; color: var(--muted); margin-top: 5px; line-height: 1.45;
     }
-    .dish-meta {
-      display: inline-block;
-      font-family: var(--sans);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-top: 4px;
+    .dish.no-img .dish-desc { -webkit-line-clamp: unset; display: block; }
+    .icons { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .icons i {
+      font-style: normal; width: 24px; height: 24px; border-radius: 50%;
+      display: grid; place-items: center; font-size: 11.5px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--line-soft);
     }
-    .dish-desc { font-size: 13.5px; color: var(--muted); margin-top: 6px; }
-
-    .alg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .alg span {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10.5px;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      border: 1px solid var(--line-soft);
-      background: rgba(255, 255, 255, 0.02);
-      padding: 3px 10px 3px 7px;
-      border-radius: 999px;
-    }
-    .alg i { font-style: normal; font-size: 12px; }
-    .alg span.ask { border-style: dashed; border-color: var(--line); color: var(--accent-soft); }
-
-    .empty {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 16px;
-      color: var(--faint);
-      padding: 22px 0;
-    }
+    .icons i.ask { border: 1px dashed var(--line); }
+    .thumb { width: 112px; height: 112px; border-radius: 14px; object-fit: cover; background: var(--surface-2); }
+    .empty { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--faint); padding: 20px 0; }
+    .empty[hidden] { display: none; }
+    .no-results { text-align: center; padding: 60px 30px; font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--muted); }
+    .no-results[hidden] { display: none; }
 
     /* ---------- Guía de alérgenos ---------- */
-    .guide-intro { font-size: 13.5px; color: var(--muted); margin: 18px 0 14px; }
+    .guide-intro { font-size: 13.5px; color: var(--muted); margin: 16px 0 14px; }
     .guide { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .g-item {
-      border: 1px solid var(--line-soft);
-      border-radius: 14px;
-      padding: 14px;
-      background: var(--surface);
-    }
+    .g-item { border: 1px solid var(--line-soft); border-radius: 14px; padding: 14px; background: var(--surface); }
     .g-item.wide { grid-column: 1 / -1; }
     .g-icon { font-size: 20px; }
-    .g-name {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-top: 8px;
-    }
+    .g-name { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-top: 8px; }
     .g-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
 
-    /* ---------- Pie ---------- */
     footer { text-align: center; padding: 56px 24px 20px; color: var(--faint); }
-    footer .f-kanji { font-family: var(--jp); font-size: 28px; color: var(--accent); opacity: 0.8; }
-    footer .f-brand { font-size: 11px; font-weight: 600; letter-spacing: 0.4em; color: var(--muted); margin-top: 10px; }
+    footer .f-kanji { font-family: var(--jp); font-size: 28px; color: var(--accent); opacity: .8; }
+    footer .f-brand { font-size: 11px; font-weight: 600; letter-spacing: .4em; color: var(--muted); margin-top: 10px; }
     footer p { font-size: 12px; margin-top: 12px; line-height: 1.6; }
 
-    /* ---------- Botón de filtro ---------- */
+    /* ---------- Botón filtro ---------- */
     .fab {
-      position: fixed;
-      left: 50%;
-      bottom: calc(18px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: none;
-      border-radius: 999px;
-      background: var(--accent);
-      color: var(--ink);
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      padding: 15px 24px;
-      white-space: nowrap;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30;
+      display: flex; align-items: center; gap: 10px; border: 0; border-radius: 999px;
+      background: var(--accent); color: var(--ink);
+      font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      padding: 15px 24px; white-space: nowrap; box-shadow: 0 12px 32px rgba(0,0,0,.55);
     }
-    .fab-count {
-      display: none;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
-      border-radius: 999px;
-      background: var(--ink);
-      color: var(--accent);
-      font-size: 11px;
-      line-height: 20px;
-      letter-spacing: 0;
-    }
+    .fab-count { display: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--ink); color: var(--accent); font-size: 11px; line-height: 20px; letter-spacing: 0; text-align: center; }
     .fab.active .fab-count { display: inline-block; }
 
-    /* ---------- Panel de filtro ---------- */
-    .scrim {
-      position: fixed; inset: 0; z-index: 40;
-      background: rgba(0, 0, 0, 0.62);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
-    }
+    /* ---------- Paneles inferiores ---------- */
+    .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.65); opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .scrim.show { opacity: 1; pointer-events: auto; }
     .sheet {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 41;
-      max-width: 560px; margin: 0 auto;
-      max-height: 86vh; overflow-y: auto;
-      background: var(--surface);
-      border-top: 1px solid var(--line);
-      border-radius: 22px 22px 0 0;
-      padding: 12px 20px calc(22px + env(safe-area-inset-bottom));
-      transform: translateY(105%);
-      transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+      max-width: 600px; margin: 0 auto; max-height: 90vh; overflow-y: auto; overscroll-behavior: contain;
+      background: var(--surface); border-top: 1px solid var(--line); border-radius: 22px 22px 0 0;
+      transform: translateY(105%); transition: transform .32s cubic-bezier(.2,.8,.2,1);
+      visibility: hidden;
     }
-    body.sheet-open .scrim { opacity: 1; pointer-events: auto; }
-    body.sheet-open .sheet { transform: none; }
-    .grabber { width: 38px; height: 4px; border-radius: 4px; background: var(--faint); margin: 0 auto 18px; opacity: 0.6; }
-    .sheet h2 { font-family: var(--serif); font-weight: 500; font-size: 28px; }
+    .sheet.show { transform: none; visibility: visible; }
+    .sheet-body { padding: 14px 20px calc(24px + env(safe-area-inset-bottom)); }
+    .grabber { width: 38px; height: 4px; border-radius: 4px; background: var(--faint); margin: 0 auto 18px; opacity: .6; }
+    .sheet h2 { font-family: var(--serif); font-weight: 500; font-size: 28px; line-height: 1.15; }
     .sheet-sub { font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
     .toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .tog {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px;
-      border: 1px solid var(--line-soft);
-      border-radius: 12px;
-      background: transparent;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 500;
-      text-align: left;
-      transition: border-color 0.2s, background 0.2s, color 0.2s;
+      display: flex; align-items: center; gap: 10px; padding: 12px;
+      border: 1px solid var(--line-soft); border-radius: 12px; background: transparent;
+      font-size: 13px; font-weight: 500; text-align: left; transition: border-color .2s, background .2s, color .2s;
     }
     .tog i { font-style: normal; font-size: 16px; }
-    .tog[aria-pressed="true"] { border-color: var(--accent); background: rgba(244, 162, 126, 0.1); color: var(--accent-soft); }
+    .tog[aria-pressed="true"] { border-color: var(--accent); background: rgba(244,162,126,.1); color: var(--accent-soft); }
     .sheet-actions { display: flex; gap: 10px; margin-top: 18px; }
-    .btn {
-      flex: 1;
-      border-radius: 999px;
-      padding: 14px;
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
+    .btn { flex: 1; border-radius: 999px; padding: 14px; font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
     .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
     .btn-solid { background: var(--accent); border: 1px solid var(--accent); color: var(--ink); }
     .sheet-note { font-size: 11.5px; color: var(--faint); margin-top: 14px; line-height: 1.5; }
 
+    .detail-img { position: relative; }
+    .detail-img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 22px 22px 0 0; background: var(--surface-2); }
+    .close {
+      position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; border-radius: 50%;
+      border: 0; display: grid; place-items: center; font-size: 20px; line-height: 1;
+      background: rgba(14,13,12,.65); color: var(--text); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .detail .sheet-body { padding-top: 20px; }
+    .detail-cat { margin-bottom: 6px; }
+    .detail-desc { font-size: 14.5px; color: var(--muted); margin-top: 10px; line-height: 1.55; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+    .chips span {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted);
+      border: 1px solid var(--line-soft); padding: 5px 11px 5px 8px; border-radius: 999px; background: rgba(255,255,255,.02);
+    }
+    .chips span.ask { border-style: dashed; border-color: var(--line); color: var(--accent-soft); }
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .sheet, .scrim, .chip { transition: none; }
@@ -307,296 +248,591 @@
 
   <div class="page">
     <header class="hero">
-      <div class="hero-kanji" aria-hidden="true">水</div>
-      <h1>MIZU</h1>
-      <div class="hero-tag">Fusión japonesa &amp; mediterránea</div>
-      <div class="hero-rule"></div>
+      <img src="fotos/mizu-gold-960.webp" alt="" fetchpriority="high" width="960" height="720">
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es">ES</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hero-content">
+        <div class="hero-kanji" aria-hidden="true">水</div>
+        <h1>MIZU</h1>
+        <div class="hero-tag" data-t="tagline"></div>
+      </div>
     </header>
 
-    <nav class="nav" aria-label="Categorías de la carta">
-      <div class="nav-track" id="nav"></div>
+    <nav class="nav" id="nav" aria-label="Categorías">
+      <button class="icon-btn" id="search-open" type="button" data-t-aria="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <div class="nav-track" id="chips"></div>
+      <div class="search">
+        <input id="q" type="search" autocomplete="off" enterkeyhint="search">
+        <button type="button" id="search-close" data-t="cancel"></button>
+      </div>
     </nav>
 
+    <section class="feat-wrap" id="feat-wrap">
+      <div class="feat-head">
+        <div>
+          <div class="kicker" data-t="featKicker"></div>
+          <div class="feat-title" data-t="featTitle"></div>
+        </div>
+      </div>
+      <div class="feat" id="feat"></div>
+    </section>
+
     <main id="menu"></main>
+    <p class="no-results" id="no-results" hidden data-t="noResults"></p>
 
     <footer>
       <div class="f-kanji" aria-hidden="true">水</div>
       <div class="f-brand">MIZU · FUSIÓN</div>
-      <p>Si tienes alguna alergia o intolerancia,<br>avisa a nuestro personal antes de pedir.</p>
+      <p data-t="footer1"></p>
+      <p data-t="footer2"></p>
     </footer>
   </div>
 
   <button class="fab" id="fab" type="button" aria-haspopup="dialog">
-    <span id="fab-label">Filtrar alérgenos</span>
+    <span id="fab-label"></span>
     <span class="fab-count" id="fab-count">0</span>
   </button>
 
   <div class="scrim" id="scrim"></div>
-  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <div class="grabber"></div>
-    <h2 id="sheet-title">Filtrar por alérgenos</h2>
-    <p class="sheet-sub">Oculta los platos que contienen:</p>
-    <div class="toggles" id="toggles"></div>
-    <div class="sheet-actions">
-      <button class="btn btn-ghost" id="clear" type="button">Limpiar</button>
-      <button class="btn btn-solid" id="done" type="button">Ver carta</button>
+
+  <div class="sheet" id="filter" role="dialog" aria-modal="true" aria-labelledby="filter-title">
+    <div class="sheet-body">
+      <div class="grabber"></div>
+      <h2 id="filter-title" data-t="filterTitle"></h2>
+      <p class="sheet-sub" data-t="filterSub"></p>
+      <div class="toggles" id="toggles"></div>
+      <div class="sheet-actions">
+        <button class="btn btn-ghost" id="clear" type="button" data-t="clear"></button>
+        <button class="btn btn-solid" id="done" type="button" data-t="done"></button>
+      </div>
+      <p class="sheet-note" data-t="filterNote"></p>
     </div>
-    <p class="sheet-note">El filtro es orientativo. Los platos marcados como «Consultar» se muestran siempre: pregunta a nuestro personal por ellos.</p>
   </div>
 
-  <noscript>
-    <p style="text-align:center;padding:40px 20px;color:#a89c95">Activa JavaScript para ver la carta.</p>
-  </noscript>
+  <div class="sheet detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="d-name">
+    <div class="detail-img">
+      <img id="d-img" alt="">
+      <button class="close" id="d-close" type="button" data-t-aria="close">×</button>
+    </div>
+    <div class="sheet-body">
+      <div class="kicker detail-cat" id="d-cat"></div>
+      <h2 id="d-name"></h2>
+      <p class="detail-desc" id="d-desc"></p>
+      <div class="chips" id="d-alg"></div>
+    </div>
+  </div>
+
+  <noscript><p style="text-align:center;padding:40px 20px;color:#a89c95">Activa JavaScript para ver la carta.</p></noscript>
 
   <script>
     /* =========================================================
-       ALÉRGENOS
+       TEXTOS DE LA INTERFAZ
+       ========================================================= */
+    const UI = {
+      es: {
+        tagline: "Fusión japonesa & mediterránea",
+        search: "Buscar", cancel: "Cancelar", searchPh: "Buscar un plato…",
+        featKicker: "Recomendados", featTitle: "Rolls especiales MIZU",
+        filter: "Filtrar alérgenos", filterOn: "Filtro activo",
+        filterTitle: "Filtrar por alérgenos", filterSub: "Oculta los platos que contienen:",
+        clear: "Limpiar", done: "Ver carta",
+        filterNote: "El filtro es orientativo. Los platos marcados como «Consultar» se muestran siempre: pregunta a nuestro personal por ellos.",
+        empty: "Ningún plato de esta sección está libre de los alérgenos seleccionados.",
+        noResults: "No encontramos ningún plato con esa búsqueda.",
+        guideTitle: "Guía de alérgenos", guideIntro: "Significado de los símbolos que aparecen en cada plato. Si tienes alguna alergia o intolerancia, avisa a nuestro personal.",
+        guideAsk: "Según elaboración", allergens: "Alérgenos", close: "Cerrar",
+        footer1: "Si tienes alguna alergia o intolerancia, avisa a nuestro personal antes de pedir.",
+        footer2: "Fotografías orientativas. La presentación puede variar."
+      },
+      en: {
+        tagline: "Japanese & Mediterranean fusion",
+        search: "Search", cancel: "Cancel", searchPh: "Search a dish…",
+        featKicker: "Recommended", featTitle: "MIZU signature rolls",
+        filter: "Filter allergens", filterOn: "Filter on",
+        filterTitle: "Filter by allergens", filterSub: "Hide dishes that contain:",
+        clear: "Clear", done: "Show menu",
+        filterNote: "This filter is for guidance only. Dishes marked “Ask staff” are always shown: please ask our team about them.",
+        empty: "No dishes in this section are free from the selected allergens.",
+        noResults: "No dishes match your search.",
+        guideTitle: "Allergen guide", guideIntro: "What the symbols on each dish mean. If you have any allergy or intolerance, please tell our staff.",
+        guideAsk: "Depends on preparation", allergens: "Allergens", close: "Close",
+        footer1: "If you have any allergy or intolerance, please tell our staff before ordering.",
+        footer2: "Photos are for illustration only. Presentation may vary."
+      }
+    };
+
+    /* =========================================================
+       ALÉRGENOS  →  [icono, nombre ES, descripción ES, nombre EN, descripción EN]
        ========================================================= */
     const ALERGENOS = {
-      gluten:     { i: "🌾", n: "Gluten",            d: "Cereales que contengan gluten (trigo, cebada, panko, salsa de soja tradicional)." },
-      crustaceos: { i: "🦐", n: "Crustáceos",        d: "Gambas, langostinos, bogavante, camarones y derivados." },
-      huevo:      { i: "🥚", n: "Huevo",             d: "Huevo y productos a base de huevo (mayonesas, rebozados, repostería)." },
-      pescado:    { i: "🐟", n: "Pescado",           d: "Salmón, atún, lubina, bacalao, dorada y caldos de pescado." },
-      soja:       { i: "🫘", n: "Soja",              d: "Habas de soja, edamame, miso, salsa de soja y teriyaki." },
-      lacteos:    { i: "🥛", n: "Lácteos",           d: "Leche, quesos (crema, parmesano, mozzarella), nata y mantequilla." },
-      frutos:     { i: "🥜", n: "Frutos de cáscara", d: "Almendras, piñones y otros frutos secos." },
-      sesamo:     { i: "🌱", n: "Sésamo",            d: "Semillas de sésamo tostado, aceite de sésamo y tahini." },
-      sulfitos:   { i: "🍷", n: "Sulfitos",          d: "Presentes en reducciones de vino tinto, Pedro Ximénez, sake y tomate seco." },
-      moluscos:   { i: "🐙", n: "Moluscos",          d: "Pulpo, calamares y derivados." },
-      consultar:  { i: "ℹ️", n: "Consultar",         d: "Los alérgenos pueden variar según el sabor, el relleno o la elaboración del día." }
+      gluten:     ["🌾", "Gluten", "Cereales que contengan gluten (trigo, cebada, panko, salsa de soja tradicional).", "Gluten", "Cereals containing gluten (wheat, barley, panko, traditional soy sauce)."],
+      crustaceos: ["🦐", "Crustáceos", "Gambas, langostinos, bogavante, camarones y derivados.", "Crustaceans", "Prawns, shrimp, lobster and derivatives."],
+      huevo:      ["🥚", "Huevo", "Huevo y productos a base de huevo (mayonesas, rebozados, repostería).", "Egg", "Egg and egg-based products (mayonnaise, batters, pastry)."],
+      pescado:    ["🐟", "Pescado", "Salmón, atún, lubina, bacalao, dorada y caldos de pescado.", "Fish", "Salmon, tuna, sea bass, cod, sea bream and fish stock."],
+      soja:       ["🫘", "Soja", "Habas de soja, edamame, miso, salsa de soja y teriyaki.", "Soy", "Soybeans, edamame, miso, soy sauce and teriyaki."],
+      lacteos:    ["🥛", "Lácteos", "Leche, quesos (crema, parmesano, mozzarella), nata y mantequilla.", "Milk", "Milk, cheeses (cream cheese, parmesan, mozzarella), cream and butter."],
+      frutos:     ["🥜", "Frutos de cáscara", "Almendras, piñones y otros frutos secos.", "Tree nuts", "Almonds, pine nuts and other nuts."],
+      sesamo:     ["🌱", "Sésamo", "Semillas de sésamo tostado, aceite de sésamo y tahini.", "Sesame", "Toasted sesame seeds, sesame oil and tahini."],
+      sulfitos:   ["🍷", "Sulfitos", "Presentes en reducciones de vino tinto, Pedro Ximénez, sake y tomate seco.", "Sulphites", "Found in red wine, Pedro Ximénez and sake reductions and in sun-dried tomato."],
+      moluscos:   ["🐙", "Moluscos", "Pulpo, calamares y derivados.", "Molluscs", "Octopus, squid and derivatives."],
+      consultar:  ["ℹ️", "Consultar", "Los alérgenos pueden variar según el sabor, el relleno o la elaboración del día.", "Ask staff", "Allergens may vary depending on the flavour, filling or preparation of the day."]
     };
 
     /* =========================================================
        CARTA
-       n = nombre · d = descripción · a = alérgenos · m = detalle
+       f  = foto (archivo en /fotos, sin "-480.webp")
+       a  = alérgenos
+       es = [nombre, descripción]   en = [name, description]
+       m  = detalle opcional (piezas)  ·  p = precio opcional, ej. p: "12,50 €"
        ========================================================= */
     const CARTA = [
-      { id: "entrantes", t: "Entrantes", numerada: true, platos: [
-        { n: "Gyozas de rabo de toro al vino tinto", d: "Empanadillas japonesas rellenas de rabo de toro cocinado lentamente al vino tinto, acompañadas de una reducción de su jugo y un toque de sésamo.", a: ["gluten", "soja", "sulfitos"] },
-        { n: "Croquetas de gambas al ajillo y miso", d: "Croquetas cremosas de gambas al ajillo con un ligero toque de miso japonés.", a: ["crustaceos", "lacteos", "gluten", "soja"] },
-        { n: "Bao de carrillada ibérica", d: "Pan bao relleno de carrillada cocinada a baja temperatura, cebolla encurtida y mayonesa de wasabi.", a: ["gluten", "huevo", "soja", "sulfitos"] },
-        { n: "Tartar de atún con salmorejo", d: "Atún rojo marinado con soja, acompañado de una base de salmorejo cordobés y aceite de oliva virgen extra.", a: ["pescado", "soja", "gluten"] },
-        { n: "Tempura de langostinos al ajillo", d: "Langostinos en tempura japonesa acompañados de una mayonesa de ajo y limón inspirada en el alioli mediterráneo.", a: ["crustaceos", "gluten", "huevo"] },
-        { n: "Patatas bravas MIZU", d: "Patatas crujientes acompañadas de salsa brava casera, mayonesa de kimchi y un toque de cebollino.", a: ["huevo", "soja", "gluten"] },
-        { n: "Ensaladilla rusa de inspiración japonesa", d: "Patata, zanahoria, atún, mayonesa japonesa y un toque de wasabi.", a: ["huevo", "pescado", "soja"] },
-        { n: "Pulpo a la brasa con salsa teriyaki", d: "Pulpo marcado a la brasa acompañado de parmentier de patata y reducción de teriyaki.", a: ["moluscos", "soja", "gluten"] },
-        { n: "Berenjena glaseada con miso y miel", d: "Berenjena asada con glaseado japonés de miso, miel de la zona y almendra tostada.", a: ["soja", "frutos", "gluten"] },
-        { n: "Alcachofas en tempura con parmesano", d: "Alcachofas crujientes acompañadas de crema de parmesano y salsa ponzu.", a: ["lacteos", "gluten", "soja", "sulfitos"] },
-        { n: "Canelón crujiente de pato y teriyaki", d: "Canelón relleno de pato desmenuzado, verduras y salsa teriyaki, terminado con semillas de sésamo.", a: ["gluten", "soja", "sesamo"] },
-        { n: "Tartar de salmón con gazpacho de mango", d: "Salmón fresco acompañado de aguacate, mango y un gazpacho suave de inspiración mediterránea.", a: ["pescado"] },
-        { n: "Calamares a la romana con mayonesa de yuzu", d: "Calamares rebozados con un toque japonés, acompañados de mayonesa cítrica de yuzu.", a: ["moluscos", "gluten", "huevo"] },
-        { n: "Hummus de edamame y aceite de oliva", d: "Crema de garbanzos y edamame con aceite de oliva virgen extra, acompañada de verduras crujientes.", a: ["soja", "sesamo"] },
-        { n: "Albóndigas de cerdo ibérico con salsa miso", d: "Albóndigas jugosas de cerdo ibérico acompañadas de una salsa de miso, miel y jengibre.", a: ["soja", "gluten"] },
-        { n: "Tortillitas de camarones con toque japonés", d: "Tortillitas crujientes de camarones con alga nori y mayonesa de lima.", a: ["crustaceos", "gluten", "huevo"] }
+      { id: "entrantes", es: ["Entrantes"], en: ["Starters"], platos: [
+        { f: "gyozas-rabo-toro", a: ["gluten","soja","sulfitos"],
+          es: ["Gyozas de rabo de toro al vino tinto", "Empanadillas japonesas rellenas de rabo de toro cocinado lentamente al vino tinto, acompañadas de una reducción de su jugo y un toque de sésamo."],
+          en: ["Oxtail gyozas in red wine", "Japanese dumplings filled with oxtail slow-cooked in red wine, served with a reduction of its juices and a touch of sesame."] },
+        { f: "croquetas-gambas", a: ["crustaceos","lacteos","gluten","soja"],
+          es: ["Croquetas de gambas al ajillo y miso", "Croquetas cremosas de gambas al ajillo con un ligero toque de miso japonés."],
+          en: ["Garlic prawn & miso croquettes", "Creamy garlic prawn croquettes with a light touch of Japanese miso."] },
+        { f: "bao-carrillada", a: ["gluten","huevo","soja","sulfitos"],
+          es: ["Bao de carrillada ibérica", "Pan bao relleno de carrillada cocinada a baja temperatura, cebolla encurtida y mayonesa de wasabi."],
+          en: ["Iberian pork cheek bao", "Bao bun filled with slow-cooked pork cheek, pickled onion and wasabi mayonnaise."] },
+        { f: "tartar-atun", a: ["pescado","soja","gluten"],
+          es: ["Tartar de atún con salmorejo", "Atún rojo marinado con soja, acompañado de una base de salmorejo cordobés y aceite de oliva virgen extra."],
+          en: ["Tuna tartare with salmorejo", "Red tuna marinated in soy, on a base of Córdoba-style salmorejo and extra virgin olive oil."] },
+        { f: "tempura-langostinos", a: ["crustaceos","gluten","huevo"],
+          es: ["Tempura de langostinos al ajillo", "Langostinos en tempura japonesa acompañados de una mayonesa de ajo y limón inspirada en el alioli mediterráneo."],
+          en: ["Garlic prawn tempura", "Prawns in Japanese tempura with a garlic and lemon mayonnaise inspired by Mediterranean aioli."] },
+        { f: "patatas-bravas", a: ["huevo","soja","gluten"],
+          es: ["Patatas bravas MIZU", "Patatas crujientes acompañadas de salsa brava casera, mayonesa de kimchi y un toque de cebollino."],
+          en: ["MIZU patatas bravas", "Crispy potatoes with homemade brava sauce, kimchi mayonnaise and a touch of chives."] },
+        { f: "ensaladilla-rusa", a: ["huevo","pescado","soja"],
+          es: ["Ensaladilla rusa de inspiración japonesa", "Patata, zanahoria, atún, mayonesa japonesa y un toque de wasabi."],
+          en: ["Japanese-style Russian salad", "Potato, carrot, tuna, Japanese mayonnaise and a hint of wasabi."] },
+        { f: "pulpo-teriyaki", a: ["moluscos","soja","gluten"],
+          es: ["Pulpo a la brasa con salsa teriyaki", "Pulpo marcado a la brasa acompañado de parmentier de patata y reducción de teriyaki."],
+          en: ["Chargrilled octopus with teriyaki", "Chargrilled octopus with potato parmentier and a teriyaki reduction."] },
+        { f: "berenjena-miso", a: ["soja","frutos","gluten"],
+          es: ["Berenjena glaseada con miso y miel", "Berenjena asada con glaseado japonés de miso, miel de la zona y almendra tostada."],
+          en: ["Miso & honey glazed aubergine", "Roasted aubergine with a Japanese miso glaze, local honey and toasted almonds."] },
+        { f: "alcachofas-tempura", a: ["lacteos","gluten","soja","sulfitos"],
+          es: ["Alcachofas en tempura con parmesano", "Alcachofas crujientes acompañadas de crema de parmesano y salsa ponzu."],
+          en: ["Artichoke tempura with parmesan", "Crispy artichokes with parmesan cream and ponzu sauce."] },
+        { f: "canelon-pato", a: ["gluten","soja","sesamo"],
+          es: ["Canelón crujiente de pato y teriyaki", "Canelón relleno de pato desmenuzado, verduras y salsa teriyaki, terminado con semillas de sésamo."],
+          en: ["Crispy duck & teriyaki cannelloni", "Cannelloni filled with shredded duck, vegetables and teriyaki sauce, finished with sesame seeds."] },
+        { f: "tartar-salmon", a: ["pescado"],
+          es: ["Tartar de salmón con gazpacho de mango", "Salmón fresco acompañado de aguacate, mango y un gazpacho suave de inspiración mediterránea."],
+          en: ["Salmon tartare with mango gazpacho", "Fresh salmon with avocado, mango and a mild Mediterranean-style gazpacho."] },
+        { f: "calamares-yuzu", a: ["moluscos","gluten","huevo"],
+          es: ["Calamares a la romana con mayonesa de yuzu", "Calamares rebozados con un toque japonés, acompañados de mayonesa cítrica de yuzu."],
+          en: ["Fried squid with yuzu mayonnaise", "Battered squid with a Japanese touch, served with citrusy yuzu mayonnaise."] },
+        { f: "hummus-edamame", a: ["soja","sesamo"],
+          es: ["Hummus de edamame y aceite de oliva", "Crema de garbanzos y edamame con aceite de oliva virgen extra, acompañada de verduras crujientes."],
+          en: ["Edamame hummus with olive oil", "Chickpea and edamame dip with extra virgin olive oil, served with crunchy vegetables."] },
+        { f: "albondigas-miso", a: ["soja","gluten"],
+          es: ["Albóndigas de cerdo ibérico con salsa miso", "Albóndigas jugosas de cerdo ibérico acompañadas de una salsa de miso, miel y jengibre."],
+          en: ["Iberian pork meatballs with miso sauce", "Juicy Iberian pork meatballs in a miso, honey and ginger sauce."] },
+        { f: "tortillitas-camarones", a: ["crustaceos","gluten","huevo"],
+          es: ["Tortillitas de camarones con toque japonés", "Tortillitas crujientes de camarones con alga nori y mayonesa de lima."],
+          en: ["Japanese-style shrimp fritters", "Crispy shrimp fritters with nori seaweed and lime mayonnaise."] }
       ]},
-      { id: "principales", t: "Principales", titulo: "Platos principales", numerada: true, platos: [
-        { n: "Arroz meloso de bogavante y miso", d: "Arroz meloso elaborado con caldo de marisco, bogavante y un toque de miso blanco japonés.", a: ["crustaceos", "moluscos", "pescado", "soja"] },
-        { n: "Solomillo ibérico al teriyaki de Pedro Ximénez", d: "Solomillo de cerdo ibérico con salsa teriyaki elaborada con Pedro Ximénez, acompañado de puré de patata y verduras.", a: ["soja", "sulfitos"] },
-        { n: "Bacalao confitado con pilpil de miso", d: "Lomo de bacalao confitado en aceite de oliva, acompañado de un pilpil tradicional con un toque de miso japonés.", a: ["pescado", "soja"] },
-        { n: "Pollo yakitori con patatas al romero", d: "Brochetas de pollo marinadas en salsa yakitori, acompañadas de patatas asadas al romero y verduras.", a: ["soja", "gluten"] },
-        { n: "Risotto de setas y shiitake", d: "Arroz cremoso con setas mediterráneas, shiitake, parmesano y un toque de sake de cocina.", a: ["lacteos", "sulfitos"] },
-        { n: "Lubina a la plancha con salsa de yuzu", d: "Lubina acompañada de verduras salteadas, patata confitada y salsa cítrica japonesa con aceite de oliva.", a: ["pescado", "soja"] },
-        { n: "Costillas de cerdo glaseadas con miel y miso", d: "Costillas cocinadas lentamente y terminadas con un glaseado de miso, miel y jengibre, acompañadas de boniato asado.", a: ["soja", "gluten"] },
-        { n: "Secreto ibérico con salsa de miso y naranja", d: "Secreto ibérico a la brasa con salsa de miso, naranja y miel, acompañado de verduras de temporada.", a: ["soja", "gluten"] },
-        { n: "Udon salteado con verduras y pollo al limón", d: "Fideos japoneses salteados con verduras mediterráneas, pollo marinado al limón y salsa de soja.", a: ["gluten", "soja"] },
-        { n: "Dorada al horno con costra de panko y hierbas", d: "Dorada acompañada de una costra crujiente de panko japonés y hierbas mediterráneas, con verduras asadas.", a: ["pescado", "gluten", "lacteos"] },
-        { n: "Carrillada ibérica a baja temperatura con arroz japonés", d: "Carrillada cocinada lentamente con vino tinto y especias japonesas, acompañada de arroz japonés y verduras.", a: ["sulfitos", "soja"] },
-        { n: "Presa ibérica con salsa teriyaki de romero", d: "Presa ibérica a la brasa con reducción de teriyaki y romero, acompañada de patatas confitadas y verduras.", a: ["soja", "gluten"] }
+      { id: "principales", es: ["Principales", "", "Platos principales"], en: ["Mains", "", "Main courses"], platos: [
+        { f: "arroz-bogavante", a: ["crustaceos","moluscos","pescado","soja"],
+          es: ["Arroz meloso de bogavante y miso", "Arroz meloso elaborado con caldo de marisco, bogavante y un toque de miso blanco japonés."],
+          en: ["Creamy lobster & miso rice", "Creamy rice cooked in seafood stock with lobster and a touch of white Japanese miso."] },
+        { f: "solomillo-pedro-ximenez", a: ["soja","sulfitos"],
+          es: ["Solomillo ibérico al teriyaki de Pedro Ximénez", "Solomillo de cerdo ibérico con salsa teriyaki elaborada con Pedro Ximénez, acompañado de puré de patata y verduras."],
+          en: ["Iberian pork tenderloin with Pedro Ximénez teriyaki", "Iberian pork tenderloin with a teriyaki sauce made with Pedro Ximénez, served with mashed potato and vegetables."] },
+        { f: "bacalao-pilpil", a: ["pescado","soja"],
+          es: ["Bacalao confitado con pilpil de miso", "Lomo de bacalao confitado en aceite de oliva, acompañado de un pilpil tradicional con un toque de miso japonés."],
+          en: ["Confit cod with miso pil-pil", "Cod loin confit in olive oil with a traditional pil-pil sauce and a touch of Japanese miso."] },
+        { f: "pollo-yakitori", a: ["soja","gluten"],
+          es: ["Pollo yakitori con patatas al romero", "Brochetas de pollo marinadas en salsa yakitori, acompañadas de patatas asadas al romero y verduras."],
+          en: ["Chicken yakitori with rosemary potatoes", "Chicken skewers marinated in yakitori sauce, with rosemary roast potatoes and vegetables."] },
+        { f: "risotto-setas", a: ["lacteos","sulfitos"],
+          es: ["Risotto de setas y shiitake", "Arroz cremoso con setas mediterráneas, shiitake, parmesano y un toque de sake de cocina."],
+          en: ["Mushroom & shiitake risotto", "Creamy rice with Mediterranean mushrooms, shiitake, parmesan and a touch of cooking sake."] },
+        { f: "lubina-yuzu", a: ["pescado","soja"],
+          es: ["Lubina a la plancha con salsa de yuzu", "Lubina acompañada de verduras salteadas, patata confitada y salsa cítrica japonesa con aceite de oliva."],
+          en: ["Grilled sea bass with yuzu sauce", "Sea bass with sautéed vegetables, confit potato and a Japanese citrus sauce with olive oil."] },
+        { f: "costillas-miel-miso", a: ["soja","gluten"],
+          es: ["Costillas de cerdo glaseadas con miel y miso", "Costillas cocinadas lentamente y terminadas con un glaseado de miso, miel y jengibre, acompañadas de boniato asado."],
+          en: ["Honey & miso glazed pork ribs", "Slow-cooked ribs finished with a miso, honey and ginger glaze, served with roast sweet potato."] },
+        { f: "secreto-miso-naranja", a: ["soja","gluten"],
+          es: ["Secreto ibérico con salsa de miso y naranja", "Secreto ibérico a la brasa con salsa de miso, naranja y miel, acompañado de verduras de temporada."],
+          en: ["Iberian secreto with miso & orange sauce", "Chargrilled Iberian secreto with a miso, orange and honey sauce and seasonal vegetables."] },
+        { f: "udon-pollo", a: ["gluten","soja"],
+          es: ["Udon salteado con verduras y pollo al limón", "Fideos japoneses salteados con verduras mediterráneas, pollo marinado al limón y salsa de soja."],
+          en: ["Stir-fried udon with vegetables & lemon chicken", "Japanese noodles stir-fried with Mediterranean vegetables, lemon-marinated chicken and soy sauce."] },
+        { f: "dorada-panko", a: ["pescado","gluten","lacteos"],
+          es: ["Dorada al horno con costra de panko y hierbas", "Dorada acompañada de una costra crujiente de panko japonés y hierbas mediterráneas, con verduras asadas."],
+          en: ["Baked sea bream with a panko & herb crust", "Sea bream with a crispy crust of Japanese panko and Mediterranean herbs, served with roast vegetables."] },
+        { f: "carrillada-arroz", a: ["sulfitos","soja"],
+          es: ["Carrillada ibérica a baja temperatura con arroz japonés", "Carrillada cocinada lentamente con vino tinto y especias japonesas, acompañada de arroz japonés y verduras."],
+          en: ["Slow-cooked Iberian pork cheek with Japanese rice", "Pork cheek slow-cooked in red wine with Japanese spices, served with Japanese rice and vegetables."] },
+        { f: "presa-teriyaki", a: ["soja","gluten"],
+          es: ["Presa ibérica con salsa teriyaki de romero", "Presa ibérica a la brasa con reducción de teriyaki y romero, acompañada de patatas confitadas y verduras."],
+          en: ["Iberian presa with rosemary teriyaki", "Chargrilled Iberian presa with a teriyaki and rosemary reduction, confit potatoes and vegetables."] }
       ]},
-      { id: "nigiris", t: "Nigiris", nota: "2 unidades", numerada: true, platos: [
-        { n: "Nigiri MIZU de salmón", d: "Arroz japonés con salmón fresco, aceite de oliva y ralladura de lima.", a: ["pescado"] },
-        { n: "Nigiri de atún y tomate seco", d: "Atún fresco sobre arroz japonés con un toque de tomate seco mediterráneo.", a: ["pescado", "sulfitos"] },
-        { n: "Nigiri de langostino al ajillo", d: "Langostino cocido sobre arroz, terminado con aceite de ajo y perejil.", a: ["crustaceos"] },
-        { n: "Nigiri de lubina y yuzu", d: "Lubina fresca sobre arroz con un ligero aliño de yuzu y aceite de oliva.", a: ["pescado"] },
-        { n: "Nigiri de foie y Pedro Ximénez", d: "Arroz japonés cubierto con foie ligeramente marcado y reducción de Pedro Ximénez.", a: ["soja", "sulfitos"] }
+      { id: "nigiris", es: ["Nigiris", "2 unidades"], en: ["Nigiri", "2 pieces"], platos: [
+        { f: "nigiri-salmon", a: ["pescado"],
+          es: ["Nigiri MIZU de salmón", "Arroz japonés con salmón fresco, aceite de oliva y ralladura de lima."],
+          en: ["MIZU salmon nigiri", "Japanese rice with fresh salmon, olive oil and lime zest."] },
+        { f: "nigiri-atun", a: ["pescado","sulfitos"],
+          es: ["Nigiri de atún y tomate seco", "Atún fresco sobre arroz japonés con un toque de tomate seco mediterráneo."],
+          en: ["Tuna & sun-dried tomato nigiri", "Fresh tuna on Japanese rice with a touch of Mediterranean sun-dried tomato."] },
+        { f: "nigiri-langostino", a: ["crustaceos"],
+          es: ["Nigiri de langostino al ajillo", "Langostino cocido sobre arroz, terminado con aceite de ajo y perejil."],
+          en: ["Garlic prawn nigiri", "Cooked prawn on rice, finished with garlic and parsley oil."] },
+        { f: "nigiri-lubina", a: ["pescado"],
+          es: ["Nigiri de lubina y yuzu", "Lubina fresca sobre arroz con un ligero aliño de yuzu y aceite de oliva."],
+          en: ["Sea bass & yuzu nigiri", "Fresh sea bass on rice with a light yuzu and olive oil dressing."] },
+        { f: "nigiri-foie", a: ["soja","sulfitos"],
+          es: ["Nigiri de foie y Pedro Ximénez", "Arroz japonés cubierto con foie ligeramente marcado y reducción de Pedro Ximénez."],
+          en: ["Foie & Pedro Ximénez nigiri", "Japanese rice topped with lightly seared foie and a Pedro Ximénez reduction."] }
       ]},
-      { id: "makis", t: "Makis", nota: "8 unidades", numerada: true, platos: [
-        { n: "Maki Mediterráneo", d: "Salmón, aguacate y tomate seco envueltos en arroz y alga nori.", a: ["pescado", "sulfitos"] },
-        { n: "Maki Andaluz", d: "Langostino, aguacate y un toque de aceite de oliva y ajo.", a: ["crustaceos"] },
-        { n: "Maki Ibérico", d: "Secreto ibérico cocinado a baja temperatura, pimiento asado y salsa teriyaki.", a: ["soja", "gluten"] },
-        { n: "Maki de atún y aceituna negra", d: "Atún fresco, aguacate y aceituna negra.", a: ["pescado"] },
-        { n: "Maki de bacalao y pimiento asado", d: "Bacalao cocinado y pimiento rojo mediterráneo con aceite de oliva.", a: ["pescado"] },
-        { n: "Maki de verduras y hummus", d: "Zanahoria, pepino, aguacate y hummus de edamame.", a: ["soja", "sesamo"] }
+      { id: "makis", es: ["Makis", "8 unidades"], en: ["Maki", "8 pieces"], platos: [
+        { f: "maki-mediterraneo", a: ["pescado","sulfitos"],
+          es: ["Maki Mediterráneo", "Salmón, aguacate y tomate seco envueltos en arroz y alga nori."],
+          en: ["Mediterranean maki", "Salmon, avocado and sun-dried tomato wrapped in rice and nori."] },
+        { f: "maki-andaluz", a: ["crustaceos"],
+          es: ["Maki Andaluz", "Langostino, aguacate y un toque de aceite de oliva y ajo."],
+          en: ["Andalusian maki", "Prawn, avocado and a touch of olive oil and garlic."] },
+        { f: "maki-iberico", a: ["soja","gluten"],
+          es: ["Maki Ibérico", "Secreto ibérico cocinado a baja temperatura, pimiento asado y salsa teriyaki."],
+          en: ["Iberian maki", "Slow-cooked Iberian secreto, roasted pepper and teriyaki sauce."] },
+        { f: "maki-atun", a: ["pescado"],
+          es: ["Maki de atún y aceituna negra", "Atún fresco, aguacate y aceituna negra."],
+          en: ["Tuna & black olive maki", "Fresh tuna, avocado and black olive."] },
+        { f: "maki-bacalao", a: ["pescado"],
+          es: ["Maki de bacalao y pimiento asado", "Bacalao cocinado y pimiento rojo mediterráneo con aceite de oliva."],
+          en: ["Cod & roasted pepper maki", "Cooked cod and Mediterranean red pepper with olive oil."] },
+        { f: "maki-verduras", a: ["soja","sesamo"],
+          es: ["Maki de verduras y hummus", "Zanahoria, pepino, aguacate y hummus de edamame."],
+          en: ["Vegetable & hummus maki", "Carrot, cucumber, avocado and edamame hummus."] }
       ]},
-      { id: "uramakis", t: "Uramakis", nota: "8 unidades", numerada: true, platos: [
-        { n: "California MIZU", d: "Langostino, aguacate y pepino, cubierto de arroz y semillas de sésamo con una salsa cítrica.", a: ["crustaceos", "sesamo"] },
-        { n: "Dragon Roll", d: "Langostino en tempura, aguacate por fuera y mayonesa japonesa de wasabi.", a: ["crustaceos", "gluten", "huevo"] },
-        { n: "Salmón Mediterráneo", d: "Salmón, queso crema y tomate seco, cubierto con sésamo tostado.", a: ["pescado", "lacteos", "sesamo"] },
-        { n: "Iberian Roll", d: "Secreto ibérico, aguacate y cebolla caramelizada, terminado con salsa teriyaki.", a: ["soja", "gluten"] },
-        { n: "Atún Ponzu Roll", d: "Atún, pepino y aguacate con una cobertura de cebolla crujiente y salsa ponzu.", a: ["pescado", "soja", "gluten"] },
-        { n: "Mango Tropical Roll", d: "Salmón, aguacate y mango fresco con un toque de lima.", a: ["pescado"] },
-        { n: "Gamba al Ajillo Roll", d: "Langostino salteado al ajillo, aguacate y mayonesa de perejil.", a: ["crustaceos", "huevo"] },
-        { n: "Caprese Roll", d: "Mozzarella, tomate seco y aguacate con albahaca y aceite de oliva virgen extra.", a: ["lacteos", "sulfitos"] }
+      { id: "uramakis", es: ["Uramakis", "8 unidades"], en: ["Uramaki", "8 pieces"], platos: [
+        { f: "california-mizu", a: ["crustaceos","sesamo"],
+          es: ["California MIZU", "Langostino, aguacate y pepino, cubierto de arroz y semillas de sésamo con una salsa cítrica."],
+          en: ["California MIZU", "Prawn, avocado and cucumber, coated in rice and sesame seeds with a citrus sauce."] },
+        { f: "dragon-roll", a: ["crustaceos","gluten","huevo"],
+          es: ["Dragon Roll", "Langostino en tempura, aguacate por fuera y mayonesa japonesa de wasabi."],
+          en: ["Dragon Roll", "Prawn tempura, avocado on the outside and Japanese wasabi mayonnaise."] },
+        { f: "salmon-mediterraneo", a: ["pescado","lacteos","sesamo"],
+          es: ["Salmón Mediterráneo", "Salmón, queso crema y tomate seco, cubierto con sésamo tostado."],
+          en: ["Mediterranean Salmon", "Salmon, cream cheese and sun-dried tomato, topped with toasted sesame."] },
+        { f: "iberian-roll", a: ["soja","gluten"],
+          es: ["Iberian Roll", "Secreto ibérico, aguacate y cebolla caramelizada, terminado con salsa teriyaki."],
+          en: ["Iberian Roll", "Iberian secreto, avocado and caramelised onion, finished with teriyaki sauce."] },
+        { f: "atun-ponzu", a: ["pescado","soja","gluten"],
+          es: ["Atún Ponzu Roll", "Atún, pepino y aguacate con una cobertura de cebolla crujiente y salsa ponzu."],
+          en: ["Tuna Ponzu Roll", "Tuna, cucumber and avocado topped with crispy onion and ponzu sauce."] },
+        { f: "mango-tropical", a: ["pescado"],
+          es: ["Mango Tropical Roll", "Salmón, aguacate y mango fresco con un toque de lima."],
+          en: ["Mango Tropical Roll", "Salmon, avocado and fresh mango with a touch of lime."] },
+        { f: "gamba-ajillo", a: ["crustaceos","huevo"],
+          es: ["Gamba al Ajillo Roll", "Langostino salteado al ajillo, aguacate y mayonesa de perejil."],
+          en: ["Garlic Prawn Roll", "Garlic-sautéed prawn, avocado and parsley mayonnaise."] },
+        { f: "caprese-roll", a: ["lacteos","sulfitos"],
+          es: ["Caprese Roll", "Mozzarella, tomate seco y aguacate con albahaca y aceite de oliva virgen extra."],
+          en: ["Caprese Roll", "Mozzarella, sun-dried tomato and avocado with basil and extra virgin olive oil."] }
       ]},
-      { id: "especiales", t: "Rolls especiales", titulo: "Rolls especiales MIZU", nota: "8 unidades", numerada: true, platos: [
-        { n: "MIZU Gold", d: "Roll de salmón y aguacate cubierto de salmón flambeado, salsa de miso y miel.", a: ["pescado", "soja", "gluten"] },
-        { n: "Flamenco Roll", d: "Relleno de langostino en tempura y aguacate, cubierto de jamón ibérico crujiente y salsa teriyaki.", a: ["crustaceos", "gluten", "soja"] },
-        { n: "Malagueño Roll", d: "Relleno de langostino, aguacate y pepino, cubierto de salmón flambeado y mayonesa de limón y aceite de oliva.", a: ["crustaceos", "pescado", "huevo"] },
-        { n: "Mediterranean Sunset", d: "Relleno de atún y aguacate, cubierto de mango y salsa cítrica de naranja.", a: ["pescado"] },
-        { n: "Volcano Roll", d: "Roll de langostino y queso crema, cubierto de una salsa ligeramente picante de kimchi y mayonesa japonesa.", a: ["crustaceos", "lacteos", "huevo", "soja"] },
-        { n: "Toscana Roll", d: "Relleno de mozzarella, tomate seco y aguacate, terminado con pesto de albahaca y piñones.", a: ["lacteos", "frutos", "sulfitos"] },
-        { n: "Samurai Ibérico", d: "Relleno de secreto ibérico y pimiento asado, cubierto con cebolla crujiente y salsa de Pedro Ximénez y soja.", a: ["gluten", "soja", "sulfitos"] },
-        { n: "Costa del Sol Roll", d: "Relleno de salmón y aguacate, cubierto con langostino flambeado, ralladura de lima y salsa de ajo suave.", a: ["pescado", "crustaceos", "huevo"] }
+      { id: "especiales", es: ["Rolls especiales", "8 unidades", "Rolls especiales MIZU"], en: ["Signature rolls", "8 pieces", "MIZU signature rolls"], destacada: true, platos: [
+        { f: "mizu-gold", a: ["pescado","soja","gluten"],
+          es: ["MIZU Gold", "Roll de salmón y aguacate cubierto de salmón flambeado, salsa de miso y miel."],
+          en: ["MIZU Gold", "Salmon and avocado roll topped with flamed salmon and a miso and honey sauce."] },
+        { f: "flamenco-roll", a: ["crustaceos","gluten","soja"],
+          es: ["Flamenco Roll", "Relleno de langostino en tempura y aguacate, cubierto de jamón ibérico crujiente y salsa teriyaki."],
+          en: ["Flamenco Roll", "Filled with prawn tempura and avocado, topped with crispy Iberian ham and teriyaki sauce."] },
+        { f: "malagueno-roll", a: ["crustaceos","pescado","huevo"],
+          es: ["Malagueño Roll", "Relleno de langostino, aguacate y pepino, cubierto de salmón flambeado y mayonesa de limón y aceite de oliva."],
+          en: ["Malagueño Roll", "Filled with prawn, avocado and cucumber, topped with flamed salmon and a lemon and olive oil mayonnaise."] },
+        { f: "mediterranean-sunset", a: ["pescado"],
+          es: ["Mediterranean Sunset", "Relleno de atún y aguacate, cubierto de mango y salsa cítrica de naranja."],
+          en: ["Mediterranean Sunset", "Filled with tuna and avocado, topped with mango and a citrus orange sauce."] },
+        { f: "volcano-roll", a: ["crustaceos","lacteos","huevo","soja"],
+          es: ["Volcano Roll", "Roll de langostino y queso crema, cubierto de una salsa ligeramente picante de kimchi y mayonesa japonesa."],
+          en: ["Volcano Roll", "Prawn and cream cheese roll topped with a mildly spicy kimchi and Japanese mayonnaise sauce."] },
+        { f: "toscana-roll", a: ["lacteos","frutos","sulfitos"],
+          es: ["Toscana Roll", "Relleno de mozzarella, tomate seco y aguacate, terminado con pesto de albahaca y piñones."],
+          en: ["Toscana Roll", "Filled with mozzarella, sun-dried tomato and avocado, finished with basil pesto and pine nuts."] },
+        { f: "samurai-iberico", a: ["gluten","soja","sulfitos"],
+          es: ["Samurai Ibérico", "Relleno de secreto ibérico y pimiento asado, cubierto con cebolla crujiente y salsa de Pedro Ximénez y soja."],
+          en: ["Samurai Ibérico", "Filled with Iberian secreto and roasted pepper, topped with crispy onion and a Pedro Ximénez and soy sauce."] },
+        { f: "costa-del-sol", a: ["pescado","crustaceos","huevo"],
+          es: ["Costa del Sol Roll", "Relleno de salmón y aguacate, cubierto con langostino flambeado, ralladura de lima y salsa de ajo suave."],
+          en: ["Costa del Sol Roll", "Filled with salmon and avocado, topped with flamed prawn, lime zest and a mild garlic sauce."] }
       ]},
-      { id: "bandejas", t: "Bandejas", titulo: "Bandejas para compartir", platos: [
-        { n: "MIZU Experience", m: "24 piezas", d: "Selección de nigiris, makis y uramakis especiales para descubrir diferentes sabores de la carta.", a: ["consultar"] },
-        { n: "Mediterranean Selection", m: "32 piezas", d: "Combinación de rolls con ingredientes mediterráneos como tomate seco, jamón ibérico, mozzarella y aceite de oliva.", a: ["consultar"] },
-        { n: "Japanese Fusion", m: "40 piezas", d: "Selección de nigiris, makis, uramakis y rolls especiales de la casa.", a: ["consultar"] }
+      { id: "bandejas", es: ["Bandejas", "", "Bandejas para compartir"], en: ["Platters", "", "Sharing platters"], platos: [
+        { a: ["consultar"], m: ["24 piezas", "24 pieces"],
+          es: ["MIZU Experience", "Selección de nigiris, makis y uramakis especiales para descubrir diferentes sabores de la carta."],
+          en: ["MIZU Experience", "A selection of nigiri, maki and special uramaki to discover different flavours from the menu."] },
+        { a: ["consultar"], m: ["32 piezas", "32 pieces"],
+          es: ["Mediterranean Selection", "Combinación de rolls con ingredientes mediterráneos como tomate seco, jamón ibérico, mozzarella y aceite de oliva."],
+          en: ["Mediterranean Selection", "A combination of rolls with Mediterranean ingredients such as sun-dried tomato, Iberian ham, mozzarella and olive oil."] },
+        { a: ["consultar"], m: ["40 piezas", "40 pieces"],
+          es: ["Japanese Fusion", "Selección de nigiris, makis, uramakis y rolls especiales de la casa."],
+          en: ["Japanese Fusion", "A selection of nigiri, maki, uramaki and house signature rolls."] }
       ]},
-      { id: "postres", t: "Postres", nota: "Fusión dulce", numerada: true, platos: [
-        { n: "Tarta de queso japonesa con miel de Málaga", d: "Tarta esponjosa acompañada de miel local.", a: ["lacteos", "huevo", "gluten"] },
-        { n: "Mochi de chocolate y aceite de oliva", d: "Dulce japonés de arroz relleno de chocolate con un ligero toque de aceite de oliva.", a: ["lacteos", "soja"] },
-        { n: "Tiramisú de té matcha", d: "Versión japonesa del tiramisú italiano, elaborado con crema de mascarpone y té matcha.", a: ["lacteos", "huevo", "gluten"] },
-        { n: "Brownie de chocolate y sésamo", d: "Brownie de chocolate acompañado de crema de sésamo y helado de vainilla.", a: ["gluten", "huevo", "lacteos", "soja", "sesamo"] },
-        { n: "Mochi de mango y maracuyá", d: "Pastelito japonés de arroz relleno de crema de frutas tropicales.", a: ["consultar"] },
-        { n: "Flan de vainilla y té hojicha", d: "Flan casero aromatizado con té verde tostado japonés.", a: ["lacteos", "huevo"] },
-        { n: "Torrija de brioche con helado de matcha", d: "Torrija caramelizada acompañada de helado japonés de té verde.", a: ["gluten", "lacteos", "huevo"] },
-        { n: "Fruta fresca con sorbete de yuzu", d: "Selección de frutas de temporada acompañada de sorbete cítrico japonés.", a: ["consultar"] }
+      { id: "postres", es: ["Postres", "Fusión dulce"], en: ["Desserts", "Sweet fusion"], platos: [
+        { f: "tarta-queso", a: ["lacteos","huevo","gluten"],
+          es: ["Tarta de queso japonesa con miel de Málaga", "Tarta esponjosa acompañada de miel local."],
+          en: ["Japanese cheesecake with Málaga honey", "Fluffy cheesecake served with local honey."] },
+        { f: "mochi-chocolate", a: ["lacteos","soja"],
+          es: ["Mochi de chocolate y aceite de oliva", "Dulce japonés de arroz relleno de chocolate con un ligero toque de aceite de oliva."],
+          en: ["Chocolate & olive oil mochi", "Japanese rice sweet filled with chocolate and a light touch of olive oil."] },
+        { f: "tiramisu-matcha", a: ["lacteos","huevo","gluten"],
+          es: ["Tiramisú de té matcha", "Versión japonesa del tiramisú italiano, elaborado con crema de mascarpone y té matcha."],
+          en: ["Matcha tiramisu", "A Japanese take on Italian tiramisu, made with mascarpone cream and matcha tea."] },
+        { f: "brownie-sesamo", a: ["gluten","huevo","lacteos","soja","sesamo"],
+          es: ["Brownie de chocolate y sésamo", "Brownie de chocolate acompañado de crema de sésamo y helado de vainilla."],
+          en: ["Chocolate & sesame brownie", "Chocolate brownie with sesame cream and vanilla ice cream."] },
+        { f: "mochi-mango", a: ["consultar"],
+          es: ["Mochi de mango y maracuyá", "Pastelito japonés de arroz relleno de crema de frutas tropicales."],
+          en: ["Mango & passion fruit mochi", "Japanese rice cake filled with tropical fruit cream."] },
+        { f: "flan-hojicha", a: ["lacteos","huevo"],
+          es: ["Flan de vainilla y té hojicha", "Flan casero aromatizado con té verde tostado japonés."],
+          en: ["Vanilla & hojicha flan", "Homemade flan flavoured with Japanese roasted green tea."] },
+        { f: "torrija-matcha", a: ["gluten","lacteos","huevo"],
+          es: ["Torrija de brioche con helado de matcha", "Torrija caramelizada acompañada de helado japonés de té verde."],
+          en: ["Brioche torrija with matcha ice cream", "Caramelised Spanish-style French toast with Japanese green tea ice cream."] },
+        { f: "fruta-yuzu", a: ["consultar"],
+          es: ["Fruta fresca con sorbete de yuzu", "Selección de frutas de temporada acompañada de sorbete cítrico japonés."],
+          en: ["Fresh fruit with yuzu sorbet", "A selection of seasonal fruit with Japanese citrus sorbet."] }
       ]},
-      { id: "bebidas", t: "Bebidas", platos: [
-        { n: "Agua y refrescos", d: "Agua mineral con y sin gas, refrescos variados y zumos naturales." },
-        { n: "Cervezas y vinos", d: "Cerveza tradicional y cerveza sin gluten. Vino blanco, tinto y rosado." },
-        { n: "Tés e infusiones", d: "Té verde japonés, té matcha, infusiones y café." },
-        { n: "Especiales de la casa", d: "Limonada casera de yuzu y hierbabuena, y té frío de melocotón y jazmín." }
+      { id: "bebidas", es: ["Bebidas"], en: ["Drinks"], platos: [
+        { es: ["Agua y refrescos", "Agua mineral con y sin gas, refrescos variados y zumos naturales."],
+          en: ["Water & soft drinks", "Still and sparkling mineral water, assorted soft drinks and fresh juices."] },
+        { es: ["Cervezas y vinos", "Cerveza tradicional y cerveza sin gluten. Vino blanco, tinto y rosado."],
+          en: ["Beers & wines", "Regular and gluten-free beer. White, red and rosé wine."] },
+        { es: ["Tés e infusiones", "Té verde japonés, té matcha, infusiones y café."],
+          en: ["Teas & infusions", "Japanese green tea, matcha, herbal teas and coffee."] },
+        { es: ["Especiales de la casa", "Limonada casera de yuzu y hierbabuena, y té frío de melocotón y jazmín."],
+          en: ["House specials", "Homemade yuzu and mint lemonade, and peach and jasmine iced tea."] }
       ]}
     ];
 
     /* =========================================================
-       RENDER
+       LÓGICA
        ========================================================= */
     const $ = (s) => document.querySelector(s);
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-    const pad = (n) => String(n).padStart(2, "0");
+    const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    const img = (f, w) => `fotos/${f}-${w}.webp`;
 
-    const nav = $("#nav");
-    const menu = $("#menu");
-    const secciones = [...CARTA, { id: "alergenos", t: "Alérgenos" }];
+    let lang = "es";
+    try { lang = localStorage.getItem("mizu-lang") || (navigator.language || "es").slice(0, 2); } catch (e) {}
+    if (!UI[lang]) lang = "en";
 
-    nav.innerHTML = secciones
-      .map((s) => `<button class="chip" type="button" data-target="${s.id}">${esc(s.t)}</button>`)
-      .join("");
+    const L = () => (lang === "es" ? 0 : 1);
+    const t = (k) => UI[lang][k];
+    const algName = (k) => ALERGENOS[k][lang === "es" ? 1 : 3];
+    const algDesc = (k) => ALERGENOS[k][lang === "es" ? 2 : 4];
 
-    const chipsAlergenos = (lista) =>
-      lista && lista.length
-        ? `<div class="alg">${lista
-            .map((k) => {
-              const a = ALERGENOS[k];
-              return `<span class="${k === "consultar" ? "ask" : ""}"><i aria-hidden="true">${a.i}</i>${esc(a.n)}</span>`;
-            })
-            .join("")}</div>`
-        : "";
+    const elegidos = new Set();
+    let consulta = "";
 
-    menu.innerHTML =
-      CARTA.map((s, si) => `
+    // índice plano de platos para abrir el detalle
+    const PLATOS = [];
+    CARTA.forEach((s) => s.platos.forEach((p) => { p.cat = s; PLATOS.push(p); }));
+
+    function render() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-t]").forEach((el) => (el.textContent = t(el.dataset.t)));
+      document.querySelectorAll("[data-t-aria]").forEach((el) => el.setAttribute("aria-label", t(el.dataset.tAria)));
+      document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+      $("#q").placeholder = t("searchPh");
+
+      const secciones = [...CARTA.map((s) => ({ id: s.id, n: s[lang][0] })), { id: "alergenos", n: t("allergens") }];
+      $("#chips").innerHTML = secciones.map((s) => `<button class="chip" type="button" data-target="${s.id}">${esc(s.n)}</button>`).join("");
+
+      const dest = CARTA.find((s) => s.destacada);
+      $("#feat").innerHTML = dest.platos.map((p) => `
+        <button class="feat-card" type="button" data-i="${PLATOS.indexOf(p)}">
+          <img src="${img(p.f, 480)}" alt="${esc(p[lang][0])}" loading="lazy" decoding="async" width="480" height="360">
+          <span>${esc(p[lang][0])}</span>
+        </button>`).join("");
+
+      $("#menu").innerHTML = CARTA.map((s) => `
         <section class="sec" id="${s.id}">
           <div class="sec-head">
-            <div class="sec-num">${pad(si + 1)}</div>
-            <h2 class="sec-title">${esc(s.titulo || s.t)}</h2>
-            ${s.nota ? `<div class="sec-note">${esc(s.nota)}</div>` : ""}
+            <h2 class="sec-title">${esc(s[lang][2] || s[lang][0])}</h2>
+            ${s[lang][1] ? `<div class="sec-note">${esc(s[lang][1])}</div>` : ""}
           </div>
-          <div class="dishes">
-            ${s.platos.map((p, pi) => `
-              <article class="dish${s.numerada ? "" : " plain"}" data-a="${(p.a || []).join(" ")}">
-                ${s.numerada ? `<div class="dish-n">${pi + 1}</div>` : ""}
-                <div>
-                  <h3 class="dish-name">${esc(p.n)}</h3>
-                  ${p.m ? `<div class="dish-meta">${esc(p.m)}</div>` : ""}
-                  <p class="dish-desc">${esc(p.d)}</p>
-                  ${chipsAlergenos(p.a)}
-                </div>
-              </article>`).join("")}
-            <p class="empty" hidden>Ningún plato de esta sección está libre de los alérgenos seleccionados.</p>
+          ${s.platos.map((p) => {
+            const tag = p.f ? "button" : "div";
+            return `
+            <${tag} class="dish${p.f ? "" : " no-img"}" ${p.f ? `type="button" data-i="${PLATOS.indexOf(p)}"` : ""} data-a="${(p.a || []).join(" ")}" data-s="${esc(norm(p.es.join(" ") + " " + p.en.join(" ")))}">
+              <span>
+                <span class="dish-name">${esc(p[lang][0])}</span>
+                ${p.m ? `<span class="dish-meta">${esc(p.m[L()])}</span>` : ""}
+                ${p.p ? `<span class="dish-meta">${esc(p.p)}</span>` : ""}
+                <span class="dish-desc">${esc(p[lang][1])}</span>
+                ${p.a ? `<span class="icons">${p.a.map((k) => `<i class="${k === "consultar" ? "ask" : ""}" title="${esc(algName(k))}">${ALERGENOS[k][0]}</i>`).join("")}</span>` : ""}
+              </span>
+              ${p.f ? `<img class="thumb" src="${img(p.f, 480)}" alt="${esc(p[lang][0])}" loading="lazy" decoding="async" width="112" height="112">` : ""}
+            </${tag}>`;
+          }).join("")}
+          <p class="empty" hidden>${esc(t("empty"))}</p>
+        </section>`).join("") + `
+        <section class="sec" id="alergenos">
+          <div class="sec-head"><h2 class="sec-title">${esc(t("guideTitle"))}</h2></div>
+          <p class="guide-intro">${esc(t("guideIntro"))}</p>
+          <div class="guide">
+            ${Object.keys(ALERGENOS).map((k) => `
+              <div class="g-item${k === "consultar" ? " wide" : ""}">
+                <div class="g-icon" aria-hidden="true">${ALERGENOS[k][0]}</div>
+                <div class="g-name">${esc(k === "consultar" ? t("guideAsk") : algName(k))}</div>
+                <div class="g-desc">${esc(algDesc(k))}</div>
+              </div>`).join("")}
           </div>
-        </section>`).join("") +
-      `<section class="sec" id="alergenos">
-        <div class="sec-head">
-          <div class="sec-num">${pad(CARTA.length + 1)}</div>
-          <h2 class="sec-title">Guía de alérgenos</h2>
-        </div>
-        <p class="guide-intro">Significado de los símbolos que aparecen bajo cada plato. Si tienes alguna alergia o intolerancia, avisa a nuestro personal.</p>
-        <div class="guide">
-          ${Object.entries(ALERGENOS).map(([k, a]) => `
-            <div class="g-item${k === "consultar" ? " wide" : ""}">
-              <div class="g-icon" aria-hidden="true">${a.i}</div>
-              <div class="g-name">${esc(k === "consultar" ? "Según elaboración" : a.n)}</div>
-              <div class="g-desc">${esc(a.d)}</div>
-            </div>`).join("")}
-        </div>
-      </section>`;
+        </section>`;
 
-    /* =========================================================
-       NAVEGACIÓN + SECCIÓN ACTIVA
-       ========================================================= */
-    const chips = [...nav.querySelectorAll(".chip")];
-    function activar(id) {
-      chips.forEach((c) => {
-        const on = c.dataset.target === id;
-        c.classList.toggle("on", on);
-        if (on) nav.scrollTo({ left: c.offsetLeft - nav.clientWidth / 2 + c.clientWidth / 2, behavior: "smooth" });
-      });
+      $("#toggles").innerHTML = Object.keys(ALERGENOS).filter((k) => k !== "consultar").map((k) =>
+        `<button class="tog" type="button" data-k="${k}" aria-pressed="${elegidos.has(k)}"><i aria-hidden="true">${ALERGENOS[k][0]}</i>${esc(algName(k))}</button>`
+      ).join("");
+
+      bindChips();
+      aplicar();
     }
-    chips.forEach((c) =>
-      c.addEventListener("click", () => {
-        document.getElementById(c.dataset.target).scrollIntoView({ behavior: "smooth", block: "start" });
-        activar(c.dataset.target);
-      })
-    );
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && activar(e.target.id)),
-      { rootMargin: "-40% 0px -55% 0px" }
-    );
-    document.querySelectorAll(".sec").forEach((s) => obs.observe(s));
-    activar(CARTA[0].id);
 
-    /* =========================================================
-       FILTRO DE ALÉRGENOS
-       ========================================================= */
-    const elegidos = new Set();
-    const toggles = $("#toggles");
-    toggles.innerHTML = Object.entries(ALERGENOS)
-      .filter(([k]) => k !== "consultar")
-      .map(([k, a]) => `<button class="tog" type="button" data-k="${k}" aria-pressed="false"><i aria-hidden="true">${a.i}</i>${esc(a.n)}</button>`)
-      .join("");
-
-    function aplicarFiltro() {
-      document.querySelectorAll(".sec .dishes").forEach((grupo) => {
-        let visibles = 0;
-        const platos = grupo.querySelectorAll(".dish");
-        platos.forEach((d) => {
-          const lista = d.dataset.a ? d.dataset.a.split(" ") : [];
-          const oculto = lista.some((k) => elegidos.has(k));
-          d.hidden = oculto;
-          if (!oculto) visibles++;
+    function aplicar() {
+      const q = norm(consulta.trim());
+      let total = 0;
+      document.querySelectorAll("#menu .sec").forEach((sec) => {
+        if (sec.id === "alergenos") { sec.hidden = !!q; return; }
+        let vis = 0;
+        const items = sec.querySelectorAll(".dish");
+        items.forEach((d) => {
+          const alg = d.dataset.a ? d.dataset.a.split(" ") : [];
+          const ok = !alg.some((k) => elegidos.has(k)) && (!q || d.dataset.s.includes(q));
+          d.hidden = !ok;
+          if (ok) vis++;
         });
-        grupo.querySelector(".empty").hidden = visibles > 0 || platos.length === 0;
+        total += vis;
+        sec.hidden = !!q && vis === 0;
+        sec.querySelector(".empty").hidden = !!q || vis > 0;
       });
+      $("#feat-wrap").hidden = !!q || elegidos.size > 0;
+      $("#no-results").hidden = !q || total > 0;
       const n = elegidos.size;
       $("#fab").classList.toggle("active", n > 0);
       $("#fab-count").textContent = n;
-      $("#fab-label").textContent = n ? "Filtro activo" : "Filtrar alérgenos";
+      $("#fab-label").textContent = n ? t("filterOn") : t("filter");
     }
 
-    toggles.addEventListener("click", (e) => {
+    /* ---- Navegación y sección activa ---- */
+    let obs;
+    function activar(id) {
+      const track = $("#chips");
+      track.querySelectorAll(".chip").forEach((c) => {
+        const on = c.dataset.target === id;
+        c.classList.toggle("on", on);
+        if (on) track.scrollTo({ left: c.offsetLeft - track.clientWidth / 2 + c.clientWidth / 2, behavior: "smooth" });
+      });
+    }
+    function bindChips() {
+      $("#chips").querySelectorAll(".chip").forEach((c) =>
+        c.addEventListener("click", () => {
+          document.getElementById(c.dataset.target).scrollIntoView({ behavior: "smooth", block: "start" });
+          activar(c.dataset.target);
+        })
+      );
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && activar(e.target.id)), { rootMargin: "-40% 0px -55% 0px" });
+      document.querySelectorAll("#menu .sec").forEach((s) => obs.observe(s));
+      activar(CARTA[0].id);
+    }
+
+    /* ---- Idioma ---- */
+    document.querySelectorAll(".lang button").forEach((b) =>
+      b.addEventListener("click", () => {
+        lang = b.dataset.lang;
+        try { localStorage.setItem("mizu-lang", lang); } catch (e) {}
+        render();
+      })
+    );
+
+    /* ---- Búsqueda ---- */
+    $("#search-open").addEventListener("click", () => {
+      $("#nav").classList.add("searching");
+      $("#q").focus();
+      $("#nav").scrollIntoView({ block: "start" });
+    });
+    $("#search-close").addEventListener("click", () => {
+      consulta = ""; $("#q").value = "";
+      $("#nav").classList.remove("searching");
+      aplicar();
+    });
+    $("#q").addEventListener("input", (e) => {
+      consulta = e.target.value; aplicar();
+      const top = $("#menu").getBoundingClientRect().top + scrollY - $("#nav").offsetHeight - 10;
+      if (scrollY > top || consulta.length === 1) scrollTo({ top, behavior: "instant" });
+    });
+
+    /* ---- Paneles ---- */
+    let abierto = null;
+    function abrir(panel) {
+      if (abierto) cerrar(true);
+      abierto = panel;
+      panel.classList.add("show");
+      $("#scrim").classList.add("show");
+      document.body.style.overflow = "hidden";
+      history.pushState({ panel: true }, "");
+    }
+    function cerrar(sinHistorial) {
+      if (!abierto) return;
+      abierto.classList.remove("show");
+      $("#scrim").classList.remove("show");
+      document.body.style.overflow = "";
+      abierto = null;
+      if (!sinHistorial && history.state && history.state.panel) history.back();
+    }
+    window.addEventListener("popstate", () => { if (abierto) cerrar(true); });
+    $("#scrim").addEventListener("click", () => cerrar());
+    document.addEventListener("keydown", (e) => e.key === "Escape" && cerrar());
+
+    /* ---- Detalle de plato ---- */
+    function verPlato(i) {
+      const p = PLATOS[i];
+      const d = $("#d-img");
+      d.src = img(p.f, 960); d.alt = p[lang][0];
+      $("#d-cat").textContent = p.cat[lang][0] + (p.cat[lang][1] ? " · " + p.cat[lang][1] : "");
+      $("#d-name").textContent = p[lang][0];
+      $("#d-desc").textContent = p[lang][1];
+      $("#d-alg").innerHTML = (p.a || []).map((k) =>
+        `<span class="${k === "consultar" ? "ask" : ""}"><i aria-hidden="true" style="font-style:normal">${ALERGENOS[k][0]}</i>${esc(algName(k))}</span>`).join("");
+      $("#detail").scrollTop = 0;
+      abrir($("#detail"));
+    }
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-i]");
+      if (b) verPlato(+b.dataset.i);
+    });
+    $("#d-close").addEventListener("click", () => cerrar());
+
+    /* ---- Filtro ---- */
+    $("#fab").addEventListener("click", () => abrir($("#filter")));
+    $("#done").addEventListener("click", () => cerrar());
+    $("#toggles").addEventListener("click", (e) => {
       const b = e.target.closest(".tog");
       if (!b) return;
       const k = b.dataset.k;
       elegidos.has(k) ? elegidos.delete(k) : elegidos.add(k);
       b.setAttribute("aria-pressed", elegidos.has(k));
-      aplicarFiltro();
+      aplicar();
     });
-
     $("#clear").addEventListener("click", () => {
       elegidos.clear();
-      toggles.querySelectorAll(".tog").forEach((b) => b.setAttribute("aria-pressed", "false"));
-      aplicarFiltro();
+      $("#toggles").querySelectorAll(".tog").forEach((b) => b.setAttribute("aria-pressed", "false"));
+      aplicar();
     });
 
-    const abrir = () => { document.body.classList.add("sheet-open"); document.body.style.overflow = "hidden"; };
-    const cerrar = () => { document.body.classList.remove("sheet-open"); document.body.style.overflow = ""; };
-    $("#fab").addEventListener("click", abrir);
-    $("#done").addEventListener("click", cerrar);
-    $("#scrim").addEventListener("click", cerrar);
-    document.addEventListener("keydown", (e) => e.key === "Escape" && cerrar());
+    render();
   </script>
 </body>
 </html>
